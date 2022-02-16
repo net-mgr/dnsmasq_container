@@ -9,6 +9,7 @@ $ docker build . -t dnsmasq
 ```
 
 ### dnsmasq の管理
+#### スクリプトを用いる方法
 1. 起動
 ```shell
 $ dnsmasq-docker.sh start
@@ -29,7 +30,7 @@ $ dnsmasq-docker.sh stop
 ```shell
 $ dnsmasq-docker.sh restart -d -p 53
 ```
-6. ステータスの確認
+6. ステータス確認
 ```shell
 $ dnsmasq-docker.sh status
 ```
@@ -38,6 +39,30 @@ $ dnsmasq-docker.sh status
 ```shell
 $ dnsmasq-docker.sh help
 ```
+
+#### systemd を用いる手法
++ 事前準備
+    1. `systemd_conf/dnsmasq-docker.service` を `/etc/systemd/system` にコピー
+    ```shell
+    # cp systemd_conf/dnsmasq-docker.service /etc/systemd/system/
+    ```
+    2. コピーした `dnsmasq-docker.service` を書き換える
+    ```shell
+    # vim /etc/systemd/system/dnsmasq-docker.service
+    ```
++ 管理
+    + 起動
+    ```shell
+    # systemctl start dnsmasq-docker
+    ```
+    + 停止
+    ```shell
+    # systemctl stop dnsmasq-docker
+    ```
+    + ステータス確認
+    ```shell
+    # systemctl status dnsmasq-docker
+    ```
 
 
 ### DNSの更新

@@ -1,0 +1,19 @@
+[Unit]
+Description=DNS on Docker Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+# Change WorkingDirectory and User to suit your environment
+WorkingDirectory = /path/to/this/repository
+User=dnsmasq
+
+# Change Port (-p xxxx) to suit your environment
+ExecStart=dnsmasq-docker.sh start -p 53
+
+ExecStop=dnsmasq-docker.sh stop
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

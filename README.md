@@ -2,47 +2,72 @@
 ## dnsmasq
 dnsmsq 公式サイト：https://thekelleys.org.uk/dnsmasq/doc.html
 
-
 ## 使い方
-1. Dokcerイメージの作成
-```
-docker build . -t dnsmasq:1
-```
-
-2. Dockerボリュームの作成
-```
-docker volume create dnsmasq-volume
-```
-作成したボリュームは
-`/var/lib/docker/volumes/`以下でアクセス可能
-
-ローカルDNSで解決したいホストファイルを作成し，以下のように配置（ホストファイル:hosts-dnsmasq）
-
-`/var/lib/docker/volumes/dnsmasq-volume/_data/hosts-dnsmasq`
-
-
-3. Dockerコンテナの起動
-```
-docker run -p 5053:53/udp -v dnsmasq-volume:/mnt --name dnsmasq dnsmasq:1
-```
-`-p 5053:53/udp`…公開するポート番号を指定 (udp)
-
-`-v dnsmasq-volume:/mnt`…dnsmasqのhostsファイルを含んだボリュームをマウント
-
-
-4. 確認
-
-以下のコマンドでDNSが起動しているか確認
-```
-nslookup -port=5053 dns localhost
+### Dokcerイメージの作成
+```shell
+$ docker build . -t dnsmasq
 ```
 
-5. DNSの更新
+### dnsmasq の管理
+#### スクリプトを用いる方法
+1. 起動
+```shell
+$ dnsmasq-docker.sh start
+```
+2. 起動 (バックグラウンドで動作させる場合)
+```shell
+$ dnsmasq-docker.sh start -d
+```
+3. 起動 (ポートを指定する場合)
+```shell
+$ dnsmasq-docker.sh start -p 53
+```
+4. 停止
+```shell
+$ dnsmasq-docker.sh stop
+```
+5. 再起動
+```shell
+$ dnsmasq-docker.sh restart -d -p 53
+```
+6. ステータス確認
+```shell
+$ dnsmasq-docker.sh status
+```
 
-更新が必要な場合，
-`/var/lib/docker/volumes/dnsmasq-volume/_data/hosts-dnsmasq`
-を編集し，
+より詳細な使い方については以下のコマンドを実行
+```shell
+$ dnsmasq-docker.sh help
 ```
-docker restart dnsmasq
+
+#### systemd を用いる手法
++ 事前準備
+    1. `systemd_conf/dnsmasq-docker.service` を `/etc/systemd/system` にコピー
+    ```shell
+    # cp systemd_conf/dnsmasq-docker.service /etc/systemd/system/
+    ```
+    2. コピーした `dnsmasq-docker.service` を書き換える
+    ```shell
+    # vim /etc/systemd/system/dnsmasq-docker.service
+    ```
++ 管理
+    + 起動
+    ```shell
+    # systemctl start dnsmasq-docker
+    ```
+    + 停止
+    ```shell
+    # systemctl stop dnsmasq-docker
+    ```
+    + ステータス確認
+    ```shell
+    # systemctl status dnsmasq-docker
+    ```
+
+
+### DNSの更新
+
+更新が必要な場合，`conf/hosts`を編集し，再起動
+```shell
+$ dnsmasq-docker.sh restart
 ```
-を実行

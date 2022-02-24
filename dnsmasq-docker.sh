@@ -107,7 +107,7 @@ function start(){
         exit 1
     fi
 
-    if [ ! istty ] && [ $ATTACH_OPTION = it ]; then
+    if (! istty) && [ $ATTACH_OPTION = it ]; then
         ATTACH_OPTION=i
     fi
 
@@ -202,15 +202,15 @@ function image_exists(){
 }
 
 function istty(){
-    if [ "$(tty)" = "not a tty" ]; then
-        return 1
-    else
+    if (tty -s); then
         return 0
+    else
+        return 1
     fi
 }
 
 function port_is_used(){
-    if [ $(ss -antu | grep -c $PORT) != 0 ]; then
+    if [ $(ss -antu | grep -c ":$PORT ") != 0 ]; then
         return 0
     else
         return 1

@@ -63,6 +63,10 @@ $ dnsmasq-docker.sh help
     ```shell
     # systemctl status dnsmasq-docker
     ```
+    + 自動起動
+    ```shell
+    # systemctl enable dnsmasq_docker
+    ```
 
 
 ### DNSの更新

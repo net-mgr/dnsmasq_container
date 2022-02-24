@@ -4,14 +4,14 @@ Requires=docker.service
 After=docker.service
 
 [Service]
-# Change WorkingDirectory and User to suit your environment
+# Change WorkingDirectory to suit your environment
 WorkingDirectory = /path/to/this/repository
+ExecStart=/path/to/this/repository/dnsmasq-docker.sh start -p 53
+ExecStop=/path/to/this/repository/dnsmasq-docker.sh stop
+
+# Change User
 User=dnsmasq
 
-# Change Port (-p xxxx) to suit your environment
-ExecStart=dnsmasq-docker.sh start -p 53
-
-ExecStop=dnsmasq-docker.sh stop
 Type=simple
 Restart=on-failure
 
